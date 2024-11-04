@@ -109,6 +109,12 @@ function GameController(
         return null;
     }
 
+    const reset = () => {
+        board.clearBoard();
+        activePlayer = players[0];
+        printRound();
+    };
+
     const playRound = (row, col) => {
         if (!board.markMove(row, col, getActivePlayer().move)) {
             printRound();
@@ -118,9 +124,7 @@ function GameController(
         winner = checkWinner(board.getBoard());
         if (winner) {
             console.log(`${checkWinner(board.getBoard()).name} is the winner!`);
-            board.clearBoard();
-            activePlayer = players[0];
-            printRound();
+            reset();
             return;
         } else {
             switchPlayerTurn();
@@ -130,7 +134,8 @@ function GameController(
 
     printRound();
 
-    return { playRound, getActivePlayer }
+    return { playRound, reset }
 }
 
+// user's can only use the playRound and reset methods of GameController from the console.
 const game = GameController();
