@@ -1,3 +1,5 @@
+// CONSOLE VERSION
+
 function GameBoard() {
     rows = 3;
     cols = 3;
