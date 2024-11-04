@@ -13,18 +13,28 @@ function GameBoard() {
 
     const getBoard = () => board;
 
-    const markMove = (row, col, move) => board[row][col].addToken(move);
+    const markMove = (row, col, move) => {
+        if (board[row][col].getValue() === null) {
+            board[row][col].addToken(move)
+            return true;
+        } else {
+            console.log('Invalid Move');
+            return false;
+        }
+    };
 
     const printBoard = () => board.map(row => row.map(cell => cell.getValue()))
         .forEach(row => console.log(row));
     // board.forEach(row => console.log(row.map(cell => cell.getValue())));
 
-    return { getBoard, markMove, printBoard }
+    const clearBoard = () => board.map(row => row.map(cell => cell.addToken(null)));
+
+    return { getBoard, markMove, clearBoard, printBoard }
 }
 
 
 function Cell() {
-    let value = '-';
+    let value = null;
 
     const addToken = (token) => value = token;
     const getValue = () => value;
@@ -42,11 +52,11 @@ function GameController(
     players = [
         {
             name: playerOne,
-            move: 'x',
+            move: 0,
         },
         {
             name: playerTwo,
-            move: 'o',
+            move: 1,
         }
     ];
 
@@ -62,11 +72,60 @@ function GameController(
         board.printBoard();
     }
 
+    const checkWinner = (board) => {
+        for (let i = 0; i < 2; i++) {
+
+            // Check rows
+            for (let row = 0; row < 3; row++) {
+                if (board[row][0].getValue() === i &&
+                    board[row][1].getValue() === i &&
+                    board[row][2].getValue() === i) {
+                    return players[i];
+                }
+            }
+
+            // Check columns
+            for (let col = 0; col < 3; col++) {
+                if (board[0][col].getValue() === i &&
+                    board[1][col].getValue() === i &&
+                    board[2][col].getValue() === i) {
+                    return players[i];
+                }
+            }
+
+            // Check diagonals
+            if (
+                (board[0][0].getValue() === i &&
+                    board[1][1].getValue() === i &&
+                    board[2][2].getValue() === i) ||
+                (board[0][2].getValue() === i &&
+                    board[1][1].getValue() === i &&
+                    board[2][0].getValue() === i)
+            ) {
+                return players[i];
+            }
+        }
+
+        return null;
+    }
+
     const playRound = (row, col) => {
-        const playerMove = getActivePlayer().move;
-        board.markMove(row, col, playerMove);
-        switchPlayerTurn();
-        printRound();
+        if (!board.markMove(row, col, getActivePlayer().move)) {
+            printRound();
+            return;
+        };
+
+        winner = checkWinner(board.getBoard());
+        if (winner) {
+            console.log(`${checkWinner(board.getBoard()).name} is the winner!`);
+            board.clearBoard();
+            activePlayer = players[0];
+            printRound();
+            return;
+        } else {
+            switchPlayerTurn();
+            printRound();
+        }
     }
 
     printRound();
