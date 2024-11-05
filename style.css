@@ -4,3 +4,28 @@
     margin: 0;
     padding: 0;
 }
+
+body {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.board {
+    display: inline-grid;
+    grid-template-columns: repeat(3, 75px);
+    border: thin solid black;
+}
+
+.cell {
+    width: 75px;
+    height: 75px;
+    border: thin solid black;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: x-large;
+    cursor: pointer;
+}

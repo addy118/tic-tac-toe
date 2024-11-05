@@ -1,11 +1,3 @@
-// user's can only use the playRound and reset methods of GameController from the console.
-const game = GameController();
-
-const resetBtn = document.querySelector('.reset');
-resetBtn.addEventListener('click', () => {
-    game.reset();
-})
-
 function GameBoard() {
     rows = 3;
     cols = 3;
@@ -56,8 +48,6 @@ function GameController(
     playerTwo = 'Player Two'
 ) {
     const board = GameBoard();
-    const result = document.querySelector('.result');
-    const turn = document.querySelector('.turn');
 
     players = [
         {
@@ -122,70 +112,30 @@ function GameController(
     const reset = () => {
         board.clearBoard();
         activePlayer = players[0];
-        result.textContent = '\u00A0';
-        updateBoard();
         printRound();
     };
 
     const playRound = (row, col) => {
-        // invalid move
         if (!board.markMove(row, col, getActivePlayer().move)) {
             printRound();
-            updateBoard();
             return;
         };
 
-        const winner = checkWinner(board.getBoard());
+        winner = checkWinner(board.getBoard());
         if (winner) {
-            // last move (ie. winning move)
             console.log(`${checkWinner(board.getBoard()).name} is the winner!`);
-
-            result.textContent = `${checkWinner(board.getBoard()).name} is the winner!`;
-
-            updateBoard();
-            setTimeout(reset, 2000);
+            reset();
             return;
         } else {
-            // normal move
             switchPlayerTurn();
             printRound();
-            updateBoard();
         }
-    }
-
-    const renderBoard = () => {
-        turn.textContent = `${getActivePlayer().name}'s turn`;
-
-        for (let i = 0; i < rows; i++) {
-            for (let j = 0; j < cols; j++) {
-                const mainBoard = board.getBoard();
-                const dom = document.querySelector('.board');
-                const cell = document.createElement('div');
-                cell.setAttribute('data-row', i);
-                cell.setAttribute('data-col', j);
-                cell.classList.add('cell');
-                cell.textContent =
-                    mainBoard[i][j].getValue() == null ? null :
-                        mainBoard[i][j].getValue() == 0 ? 'X' : 'O';
-                dom.appendChild(cell);
-
-                cell.addEventListener('click', (e) => {
-                    const { row } = cell.dataset;
-                    const { col } = cell.dataset;
-                    playRound(row, col)
-                    console.log(row, col);
-                })
-            }
-        }
-    }
-
-    const updateBoard = () => {
-        document.querySelector('.board').innerHTML = '';
-        renderBoard();
     }
 
     printRound();
-    renderBoard();
 
     return { playRound, reset }
 }
+
+// user's can only use the playRound and reset methods of GameController from the console.
+const game = GameController();
