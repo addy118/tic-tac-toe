@@ -26,7 +26,6 @@ function GameBoard() {
             board[row][col].addToken(move)
             return true;
         } else {
-            console.log('Invalid Move');
             return false;
         }
     };
@@ -56,6 +55,8 @@ function GameController(
     playerTwo = 'Player Two'
 ) {
     const board = GameBoard();
+
+    // dom elements
     const result = document.querySelector('.result');
     const turn = document.querySelector('.turn');
 
@@ -73,14 +74,8 @@ function GameController(
     let activePlayer = players[0];
 
     const getActivePlayer = () => activePlayer;
-    console.log(getActivePlayer())
 
     const switchPlayerTurn = () => activePlayer.name === playerOne ? activePlayer = players[1] : activePlayer = players[0];
-
-    const printRound = () => {
-        console.log(`${getActivePlayer().name}'s turn`);
-        board.printBoard();
-    }
 
     const checkWinner = (board) => {
         for (let i = 0; i < 2; i++) {
@@ -121,45 +116,47 @@ function GameController(
 
     const reset = () => {
         board.clearBoard();
+        updateBoard();
         activePlayer = players[0];
         result.textContent = '\u00A0';
-        updateBoard();
-        printRound();
     };
 
     const playRound = (row, col) => {
-        // invalid move
-        if (!board.markMove(row, col, getActivePlayer().move)) {
-            printRound();
+        // play the move
+        const move = board.markMove(row, col, getActivePlayer().move);
+
+        // post-invalid move
+        if (!move) {
             updateBoard();
             return;
         };
 
         const winner = checkWinner(board.getBoard());
+        // post-last move (ie. winning move)
         if (winner) {
-            // last move (ie. winning move)
-            console.log(`${checkWinner(board.getBoard()).name} is the winner!`);
-
             result.textContent = `${checkWinner(board.getBoard()).name} is the winner!`;
 
             updateBoard();
-            setTimeout(reset, 2000);
+            setTimeout(reset, 1500);
             return;
-        } else {
-            // normal move
+        }
+        // post-normal move
+        else {
             switchPlayerTurn();
-            printRound();
             updateBoard();
         }
     }
 
     const renderBoard = () => {
+        // show current player's turn
         turn.textContent = `${getActivePlayer().name}'s turn`;
 
         for (let i = 0; i < rows; i++) {
             for (let j = 0; j < cols; j++) {
                 const mainBoard = board.getBoard();
+
                 const dom = document.querySelector('.board');
+
                 const cell = document.createElement('div');
                 cell.setAttribute('data-row', i);
                 cell.setAttribute('data-col', j);
@@ -169,11 +166,11 @@ function GameController(
                         mainBoard[i][j].getValue() == 0 ? 'X' : 'O';
                 dom.appendChild(cell);
 
+                // to make board available to play
                 cell.addEventListener('click', (e) => {
                     const { row } = cell.dataset;
                     const { col } = cell.dataset;
                     playRound(row, col)
-                    console.log(row, col);
                 })
             }
         }
@@ -184,7 +181,7 @@ function GameController(
         renderBoard();
     }
 
-    printRound();
+    // initial render
     renderBoard();
 
     return { playRound, reset }
