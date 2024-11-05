@@ -1,4 +1,6 @@
-// user's can only use the playRound and reset methods of GameController from the console.
+// DOM VERSION
+
+// players can only use the playRound() and reset() methods of GameController's instance from the dom.
 const game = GameController();
 
 const resetBtn = document.querySelector('.reset');
@@ -12,6 +14,8 @@ function GameBoard() {
 
     board = []
 
+    // initialize the instance of Cell() factory function in every cell
+    // each cell can use the methods returned by Cell()
     for (let i = 0; i < rows; i++) {
         board[i] = []
         for (let j = 0; j < cols; j++) {
@@ -21,6 +25,7 @@ function GameBoard() {
 
     const getBoard = () => board;
 
+    // make the move of player on the provided co-ordinates
     const markMove = (row, col, move) => {
         if (board[row][col].getValue() === null) {
             board[row][col].addToken(move)
@@ -30,13 +35,9 @@ function GameBoard() {
         }
     };
 
-    const printBoard = () => board.map(row => row.map(cell => cell.getValue()))
-        .forEach(row => console.log(row));
-    // board.forEach(row => console.log(row.map(cell => cell.getValue())));
-
     const clearBoard = () => board.map(row => row.map(cell => cell.addToken(null)));
 
-    return { getBoard, markMove, clearBoard, printBoard }
+    return { getBoard, markMove, clearBoard }
 }
 
 
@@ -77,10 +78,11 @@ function GameController(
 
     const switchPlayerTurn = () => activePlayer.name === playerOne ? activePlayer = players[1] : activePlayer = players[0];
 
+    // check if the winner is found in current state of board
     const checkWinner = (board) => {
         for (let i = 0; i < 2; i++) {
 
-            // Check rows
+            // check rows
             for (let row = 0; row < 3; row++) {
                 if (board[row][0].getValue() === i &&
                     board[row][1].getValue() === i &&
@@ -89,7 +91,7 @@ function GameController(
                 }
             }
 
-            // Check columns
+            // check columns
             for (let col = 0; col < 3; col++) {
                 if (board[0][col].getValue() === i &&
                     board[1][col].getValue() === i &&
@@ -98,7 +100,7 @@ function GameController(
                 }
             }
 
-            // Check diagonals
+            // check diagonals
             if (
                 (board[0][0].getValue() === i &&
                     board[1][1].getValue() === i &&
@@ -114,6 +116,7 @@ function GameController(
         return null;
     }
 
+    // reset the essential game state to initial
     const reset = () => {
         board.clearBoard();
         updateBoard();
@@ -121,6 +124,7 @@ function GameController(
         result.textContent = '\u00A0';
     };
 
+    // play the move with give co-ordinates
     const playRound = (row, col) => {
         // play the move
         const move = board.markMove(row, col, getActivePlayer().move);
@@ -147,6 +151,7 @@ function GameController(
         }
     }
 
+    // render board using the current state of board array
     const renderBoard = () => {
         // show current player's turn
         turn.textContent = `${getActivePlayer().name}'s turn`;
@@ -176,6 +181,7 @@ function GameController(
         }
     }
 
+    // update the board with new moves
     const updateBoard = () => {
         document.querySelector('.board').innerHTML = '';
         renderBoard();
