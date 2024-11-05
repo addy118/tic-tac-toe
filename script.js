@@ -119,9 +119,9 @@ function GameController(
     // reset the essential game state to initial
     const reset = () => {
         board.clearBoard();
-        updateBoard();
         activePlayer = players[0];
         result.textContent = '\u00A0';
+        updateBoard();
     };
 
     // play the move with give co-ordinates
@@ -135,10 +135,21 @@ function GameController(
             return;
         };
 
+        // game ending criteria
         const winner = checkWinner(board.getBoard());
+        const emptyCells = board.getBoard()
+            .map(row => row.filter(cell => cell.getValue() == null))
+            .flat();
+
         // post-last move (ie. winning move)
-        if (winner) {
-            result.textContent = `${checkWinner(board.getBoard()).name} is the winner!`;
+        if (winner || emptyCells.length === 0) {
+            if (winner) {
+                result.textContent = `${checkWinner(board.getBoard()).name} is the winner!`;
+            };
+
+            if (emptyCells.length === 0) {
+                result.textContent = 'It\'s a tie!';
+            };
 
             updateBoard();
             setTimeout(reset, 1500);
