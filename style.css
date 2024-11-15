@@ -1,38 +1,49 @@
 * {
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
+  font-family:
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Roboto,
+    Oxygen,
+    Ubuntu,
+    Cantarell,
+    "Open Sans",
+    "Helvetica Neue",
+    sans-serif;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
 body {
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 12px;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
 }
 
 .board {
-    display: inline-grid;
-    grid-template-columns: repeat(3, 75px);
-    border: thin solid black;
+  display: inline-grid;
+  grid-template-columns: repeat(3, 75px);
+  border: thin solid black;
 }
 
 .cell {
-    width: 75px;
-    height: 75px;
-    border: thin solid black;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: x-large;
-    cursor: pointer;
+  width: 75px;
+  height: 75px;
+  border: thin solid black;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: x-large;
+  cursor: pointer;
 }
 
 button {
-    padding: 6px 18px;
-    border: thin solid black;
-    border-radius: 8px;
+  padding: 6px 18px;
+  border: thin solid black;
+  border-radius: 8px;
 }
